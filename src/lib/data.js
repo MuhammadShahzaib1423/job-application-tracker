@@ -89,128 +89,158 @@ export function seedApplications() {
       order: now - createdOffsetDays * 86400000,
     });
 
+  // Real openings from the 2026-10-16 job search (LinkedIn + Indeed,
+  // Islamabad/Rawalpindi). All start in the Wishlist for triage.
   return [
     mk(
       {
-        company: "Northbeam Labs",
-        role: "React Developer",
+        company: "AZKY Tech Labs",
+        role: "Full Stack Developer (Backend focused)",
         location: "Islamabad, Pakistan",
-        workType: "On-site",
-        salary: "Rs 180,000 / month",
-        dateApplied: "2026-10-12",
-        status: "interview",
-        jobUrl: "https://northbeamlabs.example.com/careers/react-dev",
-        contact: "Ayesha Khan — Engineering Manager",
-        notes: "Second round scheduled. They liked the portfolio walkthrough — prepare system design basics.",
-        interviewDate: "2026-10-21T11:00",
-      },
-      4
-    ),
-    mk(
-      {
-        company: "Vertexa",
-        role: "Frontend Engineer",
-        location: "Islamabad, Pakistan",
-        workType: "Hybrid",
-        salary: "Rs 220,000 / month",
-        dateApplied: "2026-10-05",
-        status: "interview",
-        jobUrl: "https://vertexa.example.com/jobs/frontend",
-        contact: "Bilal Ahmed — Talent Partner",
-        notes: "Technical round on Friday. Expect a live React coding exercise on state management.",
-        interviewDate: "2026-10-18T15:30",
-      },
-      11
-    ),
-    mk(
-      {
-        company: "Cloudhaven",
-        role: "Full Stack Developer",
-        location: "Lahore, Pakistan",
-        workType: "Hybrid",
-        salary: "Rs 250,000 / month",
-        dateApplied: "2026-09-28",
-        status: "offer",
-        jobUrl: "https://cloudhaven.example.com/careers",
-        contact: "Sarah Malik — HR Lead",
-        notes: "Offer received! Reviewing terms — ask about remote flexibility before signing.",
-      },
-      18
-    ),
-    mk(
-      {
-        company: "Loom & Lark",
-        role: "Senior Frontend Engineer",
-        location: "Remote",
         workType: "Remote",
-        salary: "$3,500 / month",
-        dateApplied: "2026-10-10",
-        status: "applied",
-        jobUrl: "https://loomandlark.example.com/jobs/senior-frontend",
-        contact: "",
-        notes: "Applied via their careers page. Tailored CV around the design-system work.",
-      },
-      6
-    ),
-    mk(
-      {
-        company: "Brightline Tech",
-        role: "Full Stack Developer",
-        location: "Remote",
-        workType: "Remote",
-        salary: "$2,800 / month",
-        dateApplied: "2026-10-08",
-        status: "applied",
-        jobUrl: "https://brightlinetech.example.com/careers",
-        contact: "Danish Raza — CTO",
-        notes: "Connected with the CTO on LinkedIn after applying. Follow up next week.",
-      },
-      8
-    ),
-    mk(
-      {
-        company: "Datawise Systems",
-        role: "Software Engineer",
-        location: "Karachi, Pakistan",
-        workType: "On-site",
-        salary: "Rs 160,000 / month",
-        dateApplied: "2026-09-15",
-        status: "rejected",
-        jobUrl: "https://datawise.example.com/jobs",
-        contact: "",
-        notes: "Rejected after first round — they wanted deeper Python experience. Good practice regardless.",
-      },
-      31
-    ),
-    mk(
-      {
-        company: "Pixelforge Studio",
-        role: "Frontend Engineer",
-        location: "Remote",
-        workType: "Remote",
-        salary: "$3,000 / month",
+        salary: "",
         dateApplied: "",
         status: "wishlist",
-        jobUrl: "https://pixelforge.example.com/careers",
+        jobUrl: "https://www.linkedin.com/jobs/view/4478872039/",
         contact: "",
-        notes: "Design-led studio, great culture reviews. Waiting for the role to open to applications.",
+        notes: "100% remote. React/Node/PostgreSQL, Next.js, REST APIs, strong DSA. Posted 1 day ago. Strongest match for your stack.",
+      },
+      0
+    ),
+    mk(
+      {
+        company: "Comtanix",
+        role: "Full Stack Developer",
+        location: "Rawalpindi, Pakistan",
+        workType: "On-site",
+        salary: "Rs 100,000-150,000 / month",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://pk.indeed.com/jobs?q=full+stack+developer&l=Islamabad&fromage=14&radius=25&from=searchOnDesktopSerp&vjk=0e38df806fe302d2",
+        contact: "",
+        notes: "Bahria Town Phase 8. 2+ years, PHP/Laravel + MERN, MySQL/PostgreSQL/MongoDB, REST APIs. Night shift 6PM-3AM - a real lifestyle trade-off to weigh. Link opens the Indeed search page; the direct job page may need a fresh search.",
+      },
+      1
+    ),
+    mk(
+      {
+        company: "Kodifly",
+        role: "Software Engineer",
+        location: "Islamabad, Pakistan",
+        workType: "On-site",
+        salary: "",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://www.linkedin.com/jobs/view/4469892843/",
+        contact: "",
+        notes: "BS/MS CS, 2+ years backend (Django/Flask), Python, React, PostgreSQL/MySQL. Posted 3 weeks ago.",
       },
       2
     ),
     mk(
       {
-        company: "Quantia",
-        role: "React Developer",
-        location: "Rawalpindi, Pakistan",
-        workType: "On-site",
-        salary: "Rs 150,000 / month",
+        company: "Mailin.ai",
+        role: "Senior Full Stack Developer (PHP/Python + DevOps)",
+        location: "South Asia",
+        workType: "Remote",
+        salary: "$500-1,500 / month",
         dateApplied: "",
         status: "wishlist",
-        jobUrl: "https://quantia.example.com/jobs/react",
-        contact: "Hira Shah — Recruiter",
-        notes: "Recruiter reached out on LinkedIn. Role looks like a strong match — apply this week.",
+        jobUrl: "https://www.linkedin.com/jobs/view/4479263664/",
+        contact: "",
+        notes: "Laravel/Django, React/Next, MySQL/PostgreSQL/MongoDB, DevOps. Posted 2 days ago. Asks 4+ years (you have 2+) - a stretch, but your Laravel + React overlap is real.",
       },
-      1
+      3
+    ),
+    mk(
+      {
+        company: "DPL",
+        role: "Full Stack .NET Developer",
+        location: "Islamabad, Pakistan",
+        workType: "Hybrid",
+        salary: "",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://www.linkedin.com/jobs/view/4471910213/",
+        contact: "",
+        notes: "2-4 yrs, .NET Core + React, TypeScript. 100+ applicants - competitive, apply with a tailored CV.",
+      },
+      4
+    ),
+    mk(
+      {
+        company: "Huzzle.com",
+        role: "Fullstack Engineer - HealthTech",
+        location: "Pakistan",
+        workType: "Remote",
+        salary: "",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://www.linkedin.com/jobs/view/4471899186/",
+        contact: "",
+        notes: "5+ yrs, React/Next/Node, Firebase. 100+ applicants. A stretch on years, but fully remote.",
+      },
+      5
+    ),
+    mk(
+      {
+        company: "PackageX",
+        role: "Senior Backend Engineer - Full Stack",
+        location: "Islamabad, Pakistan",
+        workType: "On-site",
+        salary: "",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://www.linkedin.com/jobs/view/4480106547/",
+        contact: "",
+        notes: "5+ yrs, Node/TypeScript, AWS/Docker. Posted 16 hrs ago. 100+ applicants. Stretch on years.",
+      },
+      6
+    ),
+    mk(
+      {
+        company: "RCG",
+        role: "Full Stack Developer",
+        location: "Islamabad, Pakistan",
+        workType: "On-site",
+        salary: "Competitive",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://pk.indeed.com/jobs?q=full+stack+developer&l=Islamabad&fromage=14&radius=25&from=searchOnDesktopSerp&vjk=fbbb72b2f7c20651",
+        contact: "",
+        notes: "Mon-Fri, UK hours 8:30am-5:30pm. Link opens the Indeed search page; the direct job page may need a fresh search.",
+      },
+      7
+    ),
+    mk(
+      {
+        company: "The 7 Technologies",
+        role: "Backend Developer",
+        location: "Rawalpindi, Pakistan",
+        workType: "On-site",
+        salary: "",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://pk.indeed.com/jobs?q=full+stack+developer&l=Islamabad&fromage=14&radius=25&from=searchOnDesktopSerp&vjk=0a5cc541c97f9958",
+        contact: "",
+        notes: "2+ years backend experience. Link opens the Indeed search page; the direct job page may need a fresh search.",
+      },
+      8
+    ),
+    mk(
+      {
+        company: "Vizzwebsolutions",
+        role: "AI / Full Stack Engineer",
+        location: "Islamabad, Pakistan",
+        workType: "On-site",
+        salary: "",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://pk.indeed.com/jobs?q=full+stack+developer&l=Islamabad&fromage=14&radius=25&from=searchOnDesktopSerp&vjk=2059e88b8c8f2243",
+        contact: "",
+        notes: "Full-stack with AI integration focus. Link opens the Indeed search page; the direct job page may need a fresh search.",
+      },
+      9
     ),
   ];
 }
@@ -254,15 +284,34 @@ export function deleteApplication(uid, id) {
   return deleteDoc(appDoc(uid, id));
 }
 
-/** Writes the fictional seed applications for first-time users. */
-export async function seedIfEmpty(uid) {
-  const snap = await getDocs(appsRef(uid));
-  if (!snap.empty) return false;
-  const batch = writeBatch(db);
+async function writeSeeds(uid, batch) {
   for (const seed of seedApplications()) {
     const { id, ...rest } = seed;
     batch.set(doc(appsRef(uid)), rest);
   }
-  await batch.commit();
-  return true;
+}
+
+const isDemoEntry = (d) => (d.jobUrl || "").includes("example.com");
+
+/**
+ * Seeds first-time users with the starter wishlist. One-time upgrade: if an
+ * existing account holds only the old demo entries, they are replaced too.
+ */
+export async function seedIfEmpty(uid) {
+  const snap = await getDocs(appsRef(uid));
+  const docs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  if (docs.length === 0) {
+    const batch = writeBatch(db);
+    await writeSeeds(uid, batch);
+    await batch.commit();
+    return true;
+  }
+  if (docs.every(isDemoEntry)) {
+    const batch = writeBatch(db);
+    for (const d of docs) batch.delete(appDoc(uid, d.id));
+    await writeSeeds(uid, batch);
+    await batch.commit();
+    return true;
+  }
+  return false;
 }
