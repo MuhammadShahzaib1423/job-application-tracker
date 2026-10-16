@@ -1,5 +1,52 @@
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Briefcase, Plus, Search } from "lucide-react";
+import { Briefcase, LogOut, Plus, Search } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+
+function UserMenu() {
+  const { user, logout } = useAuth();
+  const [armed, setArmed] = useState(false);
+  const timer = useRef(null);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  if (!user) return null;
+
+  const handleClick = () => {
+    if (armed) {
+      clearTimeout(timer.current);
+      setArmed(false);
+      logout().catch((err) => console.error("Logout failed:", err));
+    } else {
+      setArmed(true);
+      timer.current = setTimeout(() => setArmed(false), 3000);
+    }
+  };
+
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      <span
+        title={user.email}
+        className="hidden max-w-[140px] truncate text-[12.5px] font-medium text-slate-500 md:block"
+      >
+        {user.email}
+      </span>
+      <motion.button
+        whileTap={{ scale: 0.94 }}
+        onClick={handleClick}
+        title={armed ? "Click again to confirm log out" : "Log out"}
+        className={`flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-[12.5px] font-semibold transition ${
+          armed
+            ? "bg-rose-50 text-rose-700 ring-1 ring-rose-200"
+            : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+        }`}
+      >
+        <LogOut className="h-4 w-4" />
+        <span className="hidden sm:inline">{armed ? "Sure?" : "Log out"}</span>
+      </motion.button>
+    </div>
+  );
+}
 
 export default function Header({ query, onQueryChange, onAdd }) {
   return (
@@ -53,6 +100,8 @@ export default function Header({ query, onQueryChange, onAdd }) {
           <span className="hidden sm:inline">Add Application</span>
           <span className="sm:hidden">Add</span>
         </motion.button>
+
+        <UserMenu />
       </div>
     </motion.header>
   );

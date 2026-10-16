@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { KanbanSquare, SearchX } from "lucide-react";
+import { Briefcase, KanbanSquare, Loader2, SearchX } from "lucide-react";
+import { useAuth } from "./context/AuthContext";
+import AuthScreen from "./components/AuthScreen";
 import Header from "./components/Header";
 import StatsRow from "./components/StatsRow";
 import InterviewStrip from "./components/InterviewStrip";
@@ -11,20 +13,58 @@ import KanbanBoard from "./components/KanbanBoard";
 import ApplicationModal from "./components/ApplicationModal";
 import DetailDrawer from "./components/DetailDrawer";
 import ConfirmDialog from "./components/ConfirmDialog";
-import { STATUSES, loadApplications, newApplication, saveApplications } from "./lib/data";
+import {
+  STATUSES,
+  addApplication,
+  deleteApplication,
+  seedIfEmpty,
+  subscribeApplications,
+  updateApplication,
+} from "./lib/data";
 
-export default function App() {
-  const [applications, setApplications] = useState(() => loadApplications());
+function LoadingSplash() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50"
+    >
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 shadow-sm">
+        <Briefcase className="h-6 w-6 text-white" strokeWidth={2.2} />
+      </div>
+      <p className="text-[15px] font-extrabold tracking-tight text-slate-900">
+        JobPilot
+      </p>
+      <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
+    </motion.div>
+  );
+}
+
+function Tracker({ user }) {
+  const [applications, setApplications] = useState([]);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [drawerApp, setDrawerApp] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const seededRef = useRef(null);
 
   useEffect(() => {
-    saveApplications(applications);
-  }, [applications]);
+    setApplications([]);
+    seededRef.current = null;
+    const unsub = subscribeApplications(user.uid, (apps) => {
+      setApplications(apps);
+      if (apps.length === 0 && seededRef.current !== user.uid) {
+        seededRef.current = user.uid;
+        seedIfEmpty(user.uid).catch((err) =>
+          console.error("Failed to seed applications:", err)
+        );
+      }
+    });
+    return unsub;
+  }, [user.uid]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -82,36 +122,66 @@ export default function App() {
     setModalOpen(true);
   };
 
-  const saveApplication = (data) => {
-    setApplications((prev) => {
-      const exists = prev.some((a) => a.id === data.id);
+  const saveApplication = async (data) => {
+    const { id, ...rest } = data;
+    try {
+      const exists = applications.some((a) => a.id === id);
       if (exists) {
-        return prev.map((a) => (a.id === data.id ? { ...a, ...data } : a));
+        await updateApplication(user.uid, id, rest);
+      } else {
+        await addApplication(user.uid, rest);
       }
-      return [...prev, { ...newApplication(), ...data }];
-    });
-    setModalOpen(false);
-    setEditing(null);
+      setModalOpen(false);
+      setEditing(null);
+    } catch (err) {
+      console.error("Failed to save application:", err);
+    }
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteTarget) return;
-    setApplications((prev) => prev.filter((a) => a.id !== deleteTarget.id));
-    setDeleteTarget(null);
-    setDrawerApp(null);
+    try {
+      await deleteApplication(user.uid, deleteTarget.id);
+      setDeleteTarget(null);
+      setDrawerApp(null);
+    } catch (err) {
+      console.error("Failed to delete application:", err);
+    }
   };
 
   const handleStatusChange = (appId, newStatus, beforeId) => {
-    setApplications((prev) => {
-      const app = prev.find((a) => a.id === appId);
-      if (!app || app.status === newStatus && !beforeId) return prev;
-      const moved = { ...app, status: newStatus };
-      const rest = prev.filter((a) => a.id !== appId);
-      if (!beforeId) return [...rest, moved];
-      const idx = rest.findIndex((a) => a.id === beforeId);
-      if (idx === -1) return [...rest, moved];
-      return [...rest.slice(0, idx), moved, ...rest.slice(idx)];
-    });
+    const app = applications.find((a) => a.id === appId);
+    if (!app) return;
+
+    // Compute a persistent order value so the drop position survives the
+    // Firestore round-trip, then apply it optimistically for instant UI.
+    const column = applications
+      .filter((a) => a.status === newStatus && a.id !== appId)
+      .sort((x, y) => (x.order ?? 0) - (y.order ?? 0));
+    let newOrder;
+    if (beforeId) {
+      const idx = column.findIndex((a) => a.id === beforeId);
+      if (idx === -1) {
+        newOrder = column.length ? (column[column.length - 1].order ?? 0) + 1 : 0;
+      } else if (idx === 0) {
+        newOrder = (column[0].order ?? 0) - 1;
+      } else {
+        newOrder = ((column[idx - 1].order ?? 0) + (column[idx].order ?? 0)) / 2;
+      }
+    } else {
+      newOrder = column.length ? (column[column.length - 1].order ?? 0) + 1 : 0;
+    }
+    if (app.status === newStatus && newOrder === app.order) return;
+
+    const moved = { ...app, status: newStatus, order: newOrder };
+    setApplications((prev) =>
+      [...prev.filter((a) => a.id !== appId), moved].sort(
+        (x, y) => (x.order ?? 0) - (y.order ?? 0)
+      )
+    );
+    updateApplication(user.uid, appId, { status: newStatus, order: newOrder }).catch(
+      (err) => console.error("Failed to move application:", err)
+    );
   };
 
   const showEmptySearch = query.trim() && filtered.length === 0;
@@ -202,7 +272,7 @@ export default function App() {
             <span className="font-bold text-slate-500">JobPilot</span> — stay on top of every
             application.
           </p>
-          <p className="hidden sm:block">Your data never leaves this browser.</p>
+          <p className="hidden sm:block">Your data syncs securely to your private account.</p>
         </footer>
       </motion.main>
 
@@ -230,4 +300,12 @@ export default function App() {
       />
     </div>
   );
+}
+
+export default function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) return <LoadingSplash />;
+  if (!user) return <AuthScreen />;
+  return <Tracker user={user} />;
 }

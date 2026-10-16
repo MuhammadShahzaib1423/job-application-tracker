@@ -1,4 +1,14 @@
-export const STORAGE_KEY = "jobpilot:applications:v1";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
+import { db } from "./firebase";
 
 export const STATUSES = [
   {
@@ -66,13 +76,18 @@ export const newApplication = (overrides = {}) => ({
   notes: "",
   interviewDate: "",
   createdAt: Date.now(),
+  order: Date.now(),
   ...overrides,
 });
 
 export function seedApplications() {
   const now = Date.now();
   const mk = (overrides, createdOffsetDays) =>
-    newApplication({ ...overrides, createdAt: now - createdOffsetDays * 86400000 });
+    newApplication({
+      ...overrides,
+      createdAt: now - createdOffsetDays * 86400000,
+      order: now - createdOffsetDays * 86400000,
+    });
 
   return [
     mk(
@@ -200,25 +215,54 @@ export function seedApplications() {
   ];
 }
 
-export function loadApplications() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      const seeded = seedApplications();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-      return seeded;
-    }
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : seedApplications();
-  } catch {
-    return seedApplications();
-  }
+// ---------------------------------------------------------------------------
+// Firestore data layer — per-user collection at users/{uid}/applications.
+// Document IDs from Firestore become the app `id`; the local `id` is never
+// written. Dates stay ISO strings (no Firestore Timestamps).
+// ---------------------------------------------------------------------------
+
+const appsRef = (uid) => collection(db, "users", uid, "applications");
+const appDoc = (uid, id) => doc(db, "users", uid, "applications", id);
+
+const stripId = ({ id, ...rest }) => rest;
+
+const byOrder = (a, b) => (a.order ?? a.createdAt ?? 0) - (b.order ?? b.createdAt ?? 0);
+
+export function subscribeApplications(uid, onUpdate) {
+  return onSnapshot(appsRef(uid), (snap) => {
+    const apps = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    apps.sort(byOrder);
+    onUpdate(apps);
+  });
 }
 
-export function saveApplications(apps) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
-  } catch {
-    /* storage full or unavailable — fail silently */
+export async function addApplication(uid, data) {
+  const payload = stripId({
+    ...data,
+    createdAt: Date.now(),
+    order: Date.now(),
+  });
+  const ref = await addDoc(appsRef(uid), payload);
+  return ref.id;
+}
+
+export function updateApplication(uid, id, data) {
+  return updateDoc(appDoc(uid, id), stripId(data));
+}
+
+export function deleteApplication(uid, id) {
+  return deleteDoc(appDoc(uid, id));
+}
+
+/** Writes the fictional seed applications for first-time users. */
+export async function seedIfEmpty(uid) {
+  const snap = await getDocs(appsRef(uid));
+  if (!snap.empty) return false;
+  const batch = writeBatch(db);
+  for (const seed of seedApplications()) {
+    const { id, ...rest } = seed;
+    batch.set(doc(appsRef(uid)), rest);
   }
+  await batch.commit();
+  return true;
 }
