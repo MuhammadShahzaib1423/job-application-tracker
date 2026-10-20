@@ -242,6 +242,21 @@ export function seedApplications() {
       },
       9
     ),
+    mk(
+      {
+        company: "Avenue Mall office (DHA Phase 1, Rawalpindi)",
+        role: "Full Stack PHP Developer",
+        location: "DHA Phase 1, Rawalpindi, Pakistan",
+        workType: "On-site",
+        salary: "Competitive, exceeds market standards (per listing)",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://www.apnijobs.pk/30/full-stack-php-developer.html",
+        contact: "",
+        notes: "PHP/Laravel, JavaScript, MySQL, Git; React/Vue a plus. 3–4 yrs (stretch vs his 2+). Advertises a 10-year job contract. Board category header says Lahore but listing body says DHA Phase 1, Rawalpindi — confirm if applying. Small board; apply via email on the listing.",
+      },
+      10
+    ),
   ];
 }
 
