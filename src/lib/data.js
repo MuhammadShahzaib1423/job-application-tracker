@@ -257,6 +257,36 @@ export function seedApplications() {
       },
       10
     ),
+    mk(
+      {
+        company: "Codistan Ventures",
+        role: "Full-Stack Engineer",
+        location: "I-11, Islamabad, Pakistan",
+        workType: "On-site",
+        salary: "Up to Rs 100,000 / month",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://talenthubsol.com/jobs/full-stack-engineer-at-codistan-ventures/",
+        contact: "",
+        notes: "2 openings. 2-3 years, React + Node/Express, MongoDB/MySQL/PostgreSQL, REST APIs, Git. Strongest fit for his stack and years. Listed on talenthubsol.com (recruitment site); page shows Oct 19 - Oct 31, 2026 — fresh and open. Apply via the on-site form (no email); paste cover letter into the Message field, attach CV.",
+      },
+      11
+    ),
+    mk(
+      {
+        company: "BeHope",
+        role: "Fullstack Software Developer",
+        location: "Islamabad, Pakistan",
+        workType: "On-site (3pm-12am)",
+        salary: "Rs 125,000 - 150,000 / month",
+        dateApplied: "",
+        status: "wishlist",
+        jobUrl: "https://www.apnijobs.pk/27/fullstack-software-developer-fresh.html",
+        contact: "(protected — read the Apply-at email on the live page before sending)",
+        notes: "React/JS, REST/GraphQL APIs. Band is <1-1 year (junior to his 2+). Listing says 'Graduating in 2025' and 'start in 2025' — may be a recycled older post; verify it's live before applying.",
+      },
+      12
+    ),
   ];
 }
 
