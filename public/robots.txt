@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://job-application-tracker-muhammad-shahzaibs-projects-16858ef3.vercel.app/sitemap.xml
